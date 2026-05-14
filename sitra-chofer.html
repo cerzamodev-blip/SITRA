@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITRA Chofer</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#166534">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #166534;
+            --primary-light: #22c55e;
+            --primary-dark: #14532d;
+            --secondary: #0ea5e9;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --dark: #0f172a;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* LOGIN */
+        #loginContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 48px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* APP CONTAINER */
+        #appContainer {
+            display: none;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .app-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        /* CONTENT */
+        .content-area {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* CARD */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        /* STATUS CARD */
+        .status-card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            border: none;
+        }
+
+        .status-card .card-title {
+            color: var(--white);
+        }
+
+        .status-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+
+        .status-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* SERVICE INFO */
+        .service-info {
+            display: grid;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* GPS STATS */
+        .gps-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .gps-stat {
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .gps-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .gps-stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* ACTIONS */
+        .actions-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .action-btn {
+            width: 100%;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gray-100);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: var(--gray-400);
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* LOADING */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-500);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN -->
+    <div id="loginContainer">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">S</div>
+                <h1 class="login-title">SITRA Chofer</h1>
+                <p class="login-subtitle">Acceso para choferes</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-input" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div id="appContainer">
+        <!-- HEADER -->
+        <div class="app-header">
+            <div class="header-content">
+                <div class="header-logo">
+                    <div class="logo-icon">S</div>
+                    <div>
+                        <div class="logo-text">SITRA</div>
+                        <div class="logo-subtitle">Chofer</div>
+                    </div>
+                </div>
+                <div class="header-user">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Chofer</div>
+                        <div class="user-role">En servicio</div>
+                    </div>
+                    <div class="user-avatar" id="userAvatar">C</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content-area">
+            <!-- ESTADO ACTUAL -->
+            <div class="card status-card">
+                <div class="status-label">Estado Actual</div>
+                <div class="status-value" id="statusText">Disponible</div>
+                <div class="gps-stats">
+                    <div class="gps-stat">
+                        <div class="gps-stat-value" id="velocidad">0</div>
+                        <div class="gps-stat-label">km/h</div>
+                    </div>
+                    <div class="gps-stat">
+                        <div class="gps-stat-value" id="tiempoServicio">00:00</div>
+                        <div class="gps-stat-label">Tiempo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVICIO ACTUAL -->
+            <div class="card" id="servicioActual" style="display: none;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Servicio Actual</div>
+                        <div class="card-subtitle" id="codigoServicio">-</div>
+                    </div>
+                    <span class="badge badge-success" id="estadoServicio">En Ruta</span>
+                </div>
+
+                <div class="service-info">
+                    <div class="info-row">
+                        <span class="info-label">Origen</span>
+                        <span class="info-value" id="origen">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Destino</span>
+                        <span class="info-value" id="destino">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Hora Salida</span>
+                        <span class="info-value" id="horaSalida">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Pasajeros</span>
+                        <span class="info-value" id="pasajeros">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Vehículo</span>
+                        <span class="info-value" id="vehiculo">-</span>
+                    </div>
+                </div>
+
+                <div class="actions-grid">
+                    <button class="btn btn-success action-btn" id="btnIniciar" style="display: none;">
+                        Iniciar Servicio
+                    </button>
+                    <button class="btn btn-danger action-btn" id="btnFinalizar" style="display: none;">
+                        Finalizar Servicio
+                    </button>
+                </div>
+            </div>
+
+            <!-- SIN SERVICIOS -->
+            <div class="card" id="sinServicios">
+                <div class="empty-state">
+                    <div class="empty-icon">◆</div>
+                    <div class="empty-title">Sin servicios asignados</div>
+                    <div class="empty-text">No tienes servicios pendientes en este momento</div>
+                </div>
+            </div>
+
+            <!-- HISTORIAL -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Historial Reciente</div>
+                </div>
+                <div id="historialContainer">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- BOTÓN CERRAR SESIÓN -->
+            <button class="btn btn-secondary action-btn" onclick="logout()" style="margin-top: 20px;">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://gnprezfbcpjivyaazavq.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImducHJlemZiY3BqaXZ5YWF6YXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3ODM5OTQsImV4cCI6MjA5NDM1OTk5NH0.AmM5O-bJZctQcBPCx7O5tuSU70mGxtU5SXx-2kK_JP8';
+        const { createClient } = supabase;
+        const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let currentChofer = null;
+        let currentAsignacion = null;
+        let gpsInterval = null;
+        let tiempoInterval = null;
+        let tiempoInicio = null;
+
+        // LOGIN
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const { data, error } = await sb.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                currentUser = data.user;
+                await cargarDatosChofer();
+                showApp();
+            } catch (error) {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        });
+
+        async function logout() {
+            if (confirm('¿Cerrar sesión?')) {
+                detenerGPS();
+                await sb.auth.signOut();
+                location.reload();
+            }
+        }
+
+        async function cargarDatosChofer() {
+            try {
+                // Buscar chofer por email
+                const { data: chofer, error } = await sb
+                    .from('tf_choferes')
+                    .select('*')
+                    .eq('email', currentUser.email)
+                    .single();
+
+                if (error) throw error;
+                currentChofer = chofer;
+
+                // Buscar asignación activa
+                await cargarAsignacionActiva();
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
+
+        async function cargarAsignacionActiva() {
+            try {
+                const { data, error } = await sb
+                    .from('tf_asignaciones')
+                    .select(`
+                        *,
+                        servicio:tf_servicios(*),
+                        vehiculo:tf_vehiculos(*)
+                    `)
+                    .eq('chofer_id', currentChofer.id)
+                    .in('estado', ['pendiente', 'iniciado'])
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (data) {
+                    currentAsignacion = data;
+                    mostrarServicioActual();
+                    
+                    if (data.estado === 'iniciado') {
+                        iniciarGPS();
+                        iniciarTemporizador();
+                    }
+                } else {
+                    mostrarSinServicios();
+                }
+            } catch (error) {
+                console.log('Sin servicios activos');
+                mostrarSinServicios();
+            }
+        }
+
+        function mostrarServicioActual() {
+            document.getElementById('sinServicios').style.display = 'none';
+            document.getElementById('servicioActual').style.display = 'block';
+
+            const servicio = currentAsignacion.servicio;
+            document.getElementById('codigoServicio').textContent = servicio.codigo;
+            document.getElementById('origen').textContent = servicio.origen;
+            document.getElementById('destino').textContent = servicio.destino;
+            document.getElementById('horaSalida').textContent = servicio.hora_salida;
+            document.getElementById('pasajeros').textContent = servicio.pasajeros;
+            document.getElementById('vehiculo').textContent = currentAsignacion.vehiculo.codigo;
+
+            if (currentAsignacion.estado === 'pendiente') {
+                document.getElementById('btnIniciar').style.display = 'block';
+                document.getElementById('btnFinalizar').style.display = 'none';
+                document.getElementById('statusText').textContent = 'Servicio Asignado';
+            } else {
+                document.getElementById('btnIniciar').style.display = 'none';
+                document.getElementById('btnFinalizar').style.display = 'block';
+                document.getElementById('statusText').textContent = 'En Servicio';
+            }
+        }
+
+        function mostrarSinServicios() {
+            document.getElementById('sinServicios').style.display = 'block';
+            document.getElementById('servicioActual').style.display = 'none';
+            document.getElementById('statusText').textContent = 'Disponible';
+        }
+
+        document.getElementById('btnIniciar').addEventListener('click', async () => {
+            try {
+                const { error } = await sb
+                    .from('tf_asignaciones')
+                    .update({ 
+                        estado: 'iniciado',
+                        hora_inicio: new Date().toISOString()
+                    })
+                    .eq('id', currentAsignacion.id);
+
+                if (error) throw error;
+
+                currentAsignacion.estado = 'iniciado';
+                mostrarServicioActual();
+                iniciarGPS();
+                iniciarTemporizador();
+                alert('Servicio iniciado');
+            } catch (error) {
+                alert('Error al iniciar servicio: ' + error.message);
+            }
+        });
+
+        document.getElementById('btnFinalizar').addEventListener('click', async () => {
+            if (!confirm('¿Finalizar este servicio?')) return;
+
+            try {
+                const { error } = await sb
+                    .from('tf_asignaciones')
+                    .update({ 
+                        estado: 'completado',
+                        hora_fin: new Date().toISOString()
+                    })
+                    .eq('id', currentAsignacion.id);
+
+                if (error) throw error;
+
+                detenerGPS();
+                detenerTemporizador();
+                alert('Servicio finalizado');
+                location.reload();
+            } catch (error) {
+                alert('Error al finalizar servicio: ' + error.message);
+            }
+        });
+
+        function iniciarGPS() {
+            if (!navigator.geolocation) {
+                alert('GPS no disponible en este dispositivo');
+                return;
+            }
+
+            gpsInterval = setInterval(async () => {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude, speed } = position.coords;
+
+                    // Actualizar UI
+                    document.getElementById('velocidad').textContent = 
+                        speed ? Math.round(speed * 3.6) : 0;
+
+                    // Guardar tracking
+                    try {
+                        await sb.from('tf_tracking').insert({
+                            asignacion_id: currentAsignacion.id,
+                            latitud: latitude,
+                            longitud: longitude,
+                            velocidad: speed ? speed * 3.6 : 0
+                        });
+                    } catch (error) {
+                        console.error('Error guardando GPS:', error);
+                    }
+                });
+            }, 30000); // Cada 30 segundos
+        }
+
+        function detenerGPS() {
+            if (gpsInterval) {
+                clearInterval(gpsInterval);
+                gpsInterval = null;
+            }
+        }
+
+        function iniciarTemporizador() {
+            tiempoInicio = new Date();
+            tiempoInterval = setInterval(() => {
+                const ahora = new Date();
+                const diff = Math.floor((ahora - tiempoInicio) / 1000);
+                const horas = Math.floor(diff / 3600);
+                const minutos = Math.floor((diff % 3600) / 60);
+                document.getElementById('tiempoServicio').textContent = 
+                    `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function detenerTemporizador() {
+            if (tiempoInterval) {
+                clearInterval(tiempoInterval);
+                tiempoInterval = null;
+            }
+        }
+
+        function showApp() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('userName').textContent = currentChofer.nombre;
+            document.getElementById('userAvatar').textContent = currentChofer.nombre[0].toUpperCase();
+        }
+
+        // INICIALIZACIÓN
+        sb.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                currentUser = session.user;
+                cargarDatosChofer().then(() => showApp());
+            }
+        });
+
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                currentUser = session.user;
+                cargarDatosChofer().then(() => showApp());
+            }
+        });
+    </script>
+</body>
+</html>
