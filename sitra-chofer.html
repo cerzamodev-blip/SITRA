@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SITRA Chofer</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f1f5f9;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light);
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* LOGIN */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .logo p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* APP */
+        #appScreen {
+            display: none;
+        }
+
+        .header {
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .header-user {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .gps-status {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gps-icon {
+            font-size: 32px;
+        }
+
+        .gps-info {
+            flex: 1;
+        }
+
+        .gps-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+
+        .gps-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--light);
+            margin: 20px 0;
+        }
+
+        #mapPreview {
+            height: 200px;
+            background: #e5e5e5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="logo">
+                <h1>🚐 SITRA</h1>
+                <p>App para Choferes</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Correo o Código</label>
+                    <input type="text" id="loginUser" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- APP SCREEN -->
+    <div id="appScreen">
+        <div class="header">
+            <div>
+                <div class="header-title">SITRA Chofer</div>
+                <div class="header-user" id="userName">Chofer</div>
+            </div>
+            <button class="btn btn-logout" onclick="logout()" style="padding: 8px 16px; font-size: 14px;">Salir</button>
+        </div>
+
+        <div class="content">
+            <!-- ESTADO DEL GPS -->
+            <div class="gps-status">
+                <div class="gps-icon" id="gpsIcon">📡</div>
+                <div class="gps-info">
+                    <div class="gps-label">Estado del GPS</div>
+                    <div class="gps-value" id="gpsStatus">Inactivo</div>
+                </div>
+                <div class="gps-info">
+                    <div class="gps-label">Última actualización</div>
+                    <div class="gps-value" id="lastUpdate">--:--</div>
+                </div>
+            </div>
+
+            <!-- SERVICIO ACTIVO -->
+            <div class="status-card" id="servicioCard">
+                <div class="status-header">
+                    <div class="status-title">Estado del Servicio</div>
+                    <span class="status-badge badge-inactive" id="servicioStatus">Sin Servicio</span>
+                </div>
+                <div id="servicioInfo">
+                    <div class="alert alert-info">
+                        No tienes servicios asignados en este momento.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="status-card">
+                <div class="status-title" style="margin-bottom: 16px;">Acciones</div>
+                <button class="btn-large btn-success" onclick="iniciarServicio()" id="btnIniciar" disabled>
+                    ▶️ Iniciar Servicio
+                </button>
+                <button class="btn-large btn-warning" onclick="pausarServicio()" id="btnPausar" style="display: none;">
+                    ⏸️ Pausar Tracking
+                </button>
+                <button class="btn-large btn-danger" onclick="finalizarServicio()" id="btnFinalizar" style="display: none;">
+                    ⏹️ Finalizar Servicio
+                </button>
+            </div>
+
+            <!-- INFORMACIÓN DE UBICACIÓN -->
+            <div class="status-card" id="ubicacionCard" style="display: none;">
+                <div class="status-title" style="margin-bottom: 16px;">Ubicación Actual</div>
+                <div class="info-row">
+                    <span class="info-label">Latitud</span>
+                    <span class="info-value" id="latitud">--</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Longitud</span>
+                    <span class="info-value" id="longitud">--</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Velocidad</span>
+                    <span class="info-value" id="velocidad">-- km/h</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Precisión</span>
+                    <span class="info-value" id="precision">-- m</span>
+                </div>
+            </div>
+
+            <!-- ESTADÍSTICAS DEL DÍA -->
+            <div class="status-card">
+                <div class="status-title" style="margin-bottom: 16px;">Estadísticas del Día</div>
+                <div class="info-row">
+                    <span class="info-label">Servicios completados</span>
+                    <span class="info-value">0</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Kilómetros recorridos</span>
+                    <span class="info-value">0 km</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Horas trabajadas</span>
+                    <span class="info-value">0:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // =========================
+        // CONFIGURACIÓN
+        // =========================
+        const SUPABASE_URL = 'https://gnprezfbcpjivyaazavq.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImducHJlemZiY3BqaXZ5YWF6YXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3ODM5OTQsImV4cCI6MjA5NDM1OTk5NH0.AmM5O-bJZctQcBPCx7O5tuSU70mGxtU5SXx-2kK_JP8';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let currentChofer = null;
+        let currentServicio = null;
+        let gpsWatchId = null;
+        let trackingInterval = null;
+        let isTracking = false;
+
+        // =========================
+        // AUTENTICACIÓN
+        // =========================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                // Login con Supabase Auth
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: user,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                currentUser = data.user;
+                
+                // Buscar datos del chofer
+                const { data: chofer } = await supabase
+                    .from('tf_choferes')
+                    .select('*')
+                    .eq('email', currentUser.email)
+                    .single();
+
+                currentChofer = chofer;
+                showApp();
+            } catch (error) {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        });
+
+        function logout() {
+            if (isTracking) {
+                alert('Debes finalizar el servicio antes de salir');
+                return;
+            }
+            supabase.auth.signOut();
+            location.reload();
+        }
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            document.getElementById('userName').textContent = currentChofer?.nombre || currentUser.email;
+            
+            requestGPSPermission();
+            loadAsignacionActiva();
+        }
+
+        // =========================
+        // PERMISOS GPS
+        // =========================
+        async function requestGPSPermission() {
+            if (!navigator.geolocation) {
+                alert('Tu dispositivo no soporta GPS');
+                return;
+            }
+
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                });
+
+                updateGPSStatus('Listo', '✅');
+                console.log('GPS activado correctamente');
+            } catch (error) {
+                updateGPSStatus('Error: ' + error.message, '❌');
+                alert('No se pudo acceder al GPS. Por favor, activa la ubicación en tu dispositivo.');
+            }
+        }
+
+        function updateGPSStatus(status, icon) {
+            document.getElementById('gpsStatus').textContent = status;
+            document.getElementById('gpsIcon').textContent = icon;
+        }
+
+        // =========================
+        // CARGAR ASIGNACIÓN ACTIVA
+        // =========================
+        async function loadAsignacionActiva() {
+            try {
+                const { data, error } = await supabase
+                    .from('tf_asignaciones')
+                    .select(`
+                        *,
+                        servicio:tf_servicios(*),
+                        vehiculo:tf_vehiculos(*),
+                        ruta:tf_rutas(*)
+                    `)
+                    .eq('chofer_id', currentChofer.id)
+                    .eq('estado', 'pendiente')
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (data) {
+                    currentServicio = data;
+                    mostrarServicioAsignado(data);
+                }
+            } catch (error) {
+                console.log('No hay servicios asignados');
+            }
+        }
+
+        function mostrarServicioAsignado(asignacion) {
+            const servicio = asignacion.servicio;
+            const vehiculo = asignacion.vehiculo;
+            const ruta = asignacion.ruta;
+
+            document.getElementById('servicioStatus').textContent = 'Asignado';
+            document.getElementById('servicioStatus').className = 'status-badge badge-active';
+            
+            document.getElementById('servicioInfo').innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Código Servicio</span>
+                    <span class="info-value">${servicio.codigo}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Cliente</span>
+                    <span class="info-value">${servicio.origen}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ruta</span>
+                    <span class="info-value">${servicio.origen} → ${servicio.destino}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Hora Salida</span>
+                    <span class="info-value">${servicio.hora_salida}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Vehículo</span>
+                    <span class="info-value">${vehiculo.codigo} - ${vehiculo.marca} ${vehiculo.modelo}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pasajeros</span>
+                    <span class="info-value">${servicio.pasajeros || '--'}</span>
+                </div>
+            `;
+
+            document.getElementById('btnIniciar').disabled = false;
+        }
+
+        // =========================
+        // CONTROL DE SERVICIO
+        // =========================
+        async function iniciarServicio() {
+            if (!currentServicio) {
+                alert('No tienes un servicio asignado');
+                return;
+            }
+
+            try {
+                // Actualizar estado de asignación
+                await supabase
+                    .from('tf_asignaciones')
+                    .update({
+                        estado: 'iniciado',
+                        hora_salida_real: new Date().toISOString()
+                    })
+                    .eq('id', currentServicio.id);
+
+                // Actualizar estado de servicio
+                await supabase
+                    .from('tf_servicios')
+                    .update({ estado: 'en_curso' })
+                    .eq('id', currentServicio.servicio.id);
+
+                isTracking = true;
+                startGPSTracking();
+
+                document.getElementById('btnIniciar').style.display = 'none';
+                document.getElementById('btnPausar').style.display = 'block';
+                document.getElementById('btnFinalizar').style.display = 'block';
+                document.getElementById('ubicacionCard').style.display = 'block';
+                document.getElementById('servicioStatus').textContent = 'En Curso';
+
+                alert('Servicio iniciado. El tracking GPS está activo.');
+            } catch (error) {
+                alert('Error al iniciar servicio: ' + error.message);
+            }
+        }
+
+        function pausarServicio() {
+            if (isTracking) {
+                stopGPSTracking();
+                document.getElementById('btnPausar').innerHTML = '▶️ Reanudar Tracking';
+                updateGPSStatus('Pausado', '⏸️');
+            } else {
+                startGPSTracking();
+                document.getElementById('btnPausar').innerHTML = '⏸️ Pausar Tracking';
+            }
+        }
+
+        async function finalizarServicio() {
+            if (!confirm('¿Estás seguro de finalizar este servicio?')) {
+                return;
+            }
+
+            try {
+                stopGPSTracking();
+
+                // Actualizar asignación
+                await supabase
+                    .from('tf_asignaciones')
+                    .update({
+                        estado: 'completado',
+                        hora_llegada_real: new Date().toISOString()
+                    })
+                    .eq('id', currentServicio.id);
+
+                // Actualizar servicio
+                await supabase
+                    .from('tf_servicios')
+                    .update({ estado: 'completado' })
+                    .eq('id', currentServicio.servicio.id);
+
+                alert('Servicio finalizado correctamente');
+                
+                // Reset UI
+                currentServicio = null;
+                document.getElementById('btnIniciar').style.display = 'block';
+                document.getElementById('btnPausar').style.display = 'none';
+                document.getElementById('btnFinalizar').style.display = 'none';
+                document.getElementById('ubicacionCard').style.display = 'none';
+                document.getElementById('servicioStatus').textContent = 'Sin Servicio';
+                document.getElementById('servicioStatus').className = 'status-badge badge-inactive';
+                document.getElementById('servicioInfo').innerHTML = `
+                    <div class="alert alert-info">
+                        No tienes servicios asignados en este momento.
+                    </div>
+                `;
+                
+                // Buscar siguiente servicio
+                loadAsignacionActiva();
+            } catch (error) {
+                alert('Error al finalizar servicio: ' + error.message);
+            }
+        }
+
+        // =========================
+        // GPS TRACKING
+        // =========================
+        function startGPSTracking() {
+            isTracking = true;
+            updateGPSStatus('Activo', '✅');
+
+            // Obtener ubicación cada 30 segundos
+            gpsWatchId = navigator.geolocation.watchPosition(
+                sendLocationToServer,
+                handleGPSError,
+                {
+                    enableHighAccuracy: true,
+                    timeout: 30000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        function stopGPSTracking() {
+            isTracking = false;
+            if (gpsWatchId) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
+            }
+            updateGPSStatus('Inactivo', '⏸️');
+        }
+
+        async function sendLocationToServer(position) {
+            const coords = position.coords;
+
+            // Actualizar UI
+            document.getElementById('latitud').textContent = coords.latitude.toFixed(6);
+            document.getElementById('longitud').textContent = coords.longitude.toFixed(6);
+            document.getElementById('velocidad').textContent = (coords.speed ? (coords.speed * 3.6).toFixed(1) : '0') + ' km/h';
+            document.getElementById('precision').textContent = coords.accuracy.toFixed(0) + ' m';
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('es-DO');
+
+            // Enviar a Supabase
+            try {
+                await supabase
+                    .from('tf_tracking')
+                    .insert({
+                        asignacion_id: currentServicio.id,
+                        vehiculo_id: currentServicio.vehiculo_id,
+                        chofer_id: currentChofer.id,
+                        latitud: coords.latitude,
+                        longitud: coords.longitude,
+                        velocidad: coords.speed ? coords.speed * 3.6 : 0,
+                        rumbo: coords.heading || null,
+                        altitud: coords.altitude || null,
+                        precision: coords.accuracy
+                    });
+
+                console.log('Ubicación enviada correctamente');
+            } catch (error) {
+                console.error('Error enviando ubicación:', error);
+            }
+        }
+
+        function handleGPSError(error) {
+            let errorMsg = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMsg = 'Permiso GPS denegado';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMsg = 'Ubicación no disponible';
+                    break;
+                case error.TIMEOUT:
+                    errorMsg = 'Timeout GPS';
+                    break;
+            }
+            updateGPSStatus(errorMsg, '❌');
+            console.error('GPS Error:', error);
+        }
+
+        // =========================
+        // INICIALIZACIÓN
+        // =========================
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                location.reload();
+            }
+        });
+
+        // Verificar sesión al cargar
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
+            if (session) {
+                currentUser = session.user;
+                
+                const { data: chofer } = await supabase
+                    .from('tf_choferes')
+                    .select('*')
+                    .eq('email', currentUser.email)
+                    .single();
+
+                currentChofer = chofer;
+                showApp();
+            }
+        });
+
+        // Prevenir cierre accidental si hay tracking activo
+        window.addEventListener('beforeunload', (e) => {
+            if (isTracking) {
+                e.preventDefault();
+                e.returnValue = 'Tienes un servicio activo. ¿Seguro que quieres salir?';
+                return e.returnValue;
+            }
+        });
+    </script>
+</body>
+</html>
